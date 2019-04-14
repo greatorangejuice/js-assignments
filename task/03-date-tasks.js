@@ -22,7 +22,8 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-   throw new Error('Not implemented');
+   let someDate = Date.parse(value);
+   return someDate;
 }
 
 /**
@@ -37,7 +38,8 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-   throw new Error('Not implemented');
+   let someDate = Date.parse(value);
+   return someDate;
 }
 
 
@@ -56,7 +58,17 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   throw new Error('Not implemented');
+   let year = date.getFullYear();
+   if (year % 4 !== 0) {
+      return false;
+   } else
+      if (year % 100 !== 0) {
+         return true;
+      } else
+         if (year % 400 !== 0) {
+            return false;
+         } else
+            return true;
 }
 
 
@@ -76,7 +88,18 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-   throw new Error('Not implemented');
+   function getTwoDigits(n) {
+      return (n < 10 ? '0' : '') + n;
+   }
+
+   function getThreeDigits(n) {
+      return (n < 100 ? '0' : '') + getTwoDigits(n);
+   }
+   let hours = endDate.getUTCHours() - startDate.getUTCHours();
+   let minutes = endDate.getUTCMinutes() - startDate.getUTCMinutes();
+   let seconds = endDate.getUTCSeconds() - startDate.getUTCSeconds();
+   let milliseconds = (endDate.getTime() - startDate.getTime()) % 1000;
+   return getTwoDigits(hours) + ":" + getTwoDigits(minutes) + ":" + getTwoDigits(seconds) + "." + getThreeDigits(milliseconds);
 }
 
 
@@ -94,14 +117,17 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-    throw new Error('Not implemented');
+   let hourAngle = (date.getUTCHours() % 12 * 60 + date.getMinutes()) * 0.5;
+   let minuteAngle = date.getUTCMinutes() * 6;
+   let diff = Math.abs(hourAngle - minuteAngle);
+   return Math.min(diff, 360 - diff) * Math.PI / 180;
 }
 
 
 module.exports = {
-    parseDataFromRfc2822: parseDataFromRfc2822,
-    parseDataFromIso8601: parseDataFromIso8601,
-    isLeapYear: isLeapYear,
-    timeSpanToString: timeSpanToString,
-    angleBetweenClockHands: angleBetweenClockHands
+   parseDataFromRfc2822: parseDataFromRfc2822,
+   parseDataFromIso8601: parseDataFromIso8601,
+   isLeapYear: isLeapYear,
+   timeSpanToString: timeSpanToString,
+   angleBetweenClockHands: angleBetweenClockHands
 };
